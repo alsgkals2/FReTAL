@@ -1,3 +1,9 @@
+import torch
+import torch.nn as nn
+import numpy as np
+from torch.utils.data import DataLoader
+from torch.nn import functional as F
+from Function_common import CustumDataset
 def _GetIndex(data_1):
     idx = -1
     if data_1 > 0.5 and data_1 <= 0.6:
@@ -12,7 +18,7 @@ def _GetIndex(data_1):
         idx = 4
     return idx
 
-def GetSplitLoaders_BinaryClasses(list_correct,dataset,num_store_per):
+def GetSplitLoaders_BinaryClasses(list_correct,dataset,train_aug=None,num_store_per=5):
     correct_loader=[[],[]]
     num_data = 0
     for i in range(num_store_per):
@@ -31,7 +37,7 @@ def GetSplitLoaders_BinaryClasses(list_correct,dataset,num_store_per):
     print(list_length_realfakeloader)
     return correct_loader,np.array(list_length_realfakeloader)/len(dataset.target)
 
-def GetSplitLoadersRealFake(list_correct,dataset,num_store_per):
+def GetSplitLoadersRealFake(list_correct,dataset,train_aug=None,num_store_per=5):
     correct_loader=[[],[]]
     num_data = 0
     for i in range(num_store_per):
@@ -48,7 +54,7 @@ def GetSplitLoadersRealFake(list_correct,dataset,num_store_per):
                                      batch_size=200, shuffle=False, num_workers=4, pin_memory=True))    
     
     list_length_realfakeloader = [[len(j.dataset) if j else 0 for j in i] for i in correct_loader]
-    return correct_loader,np.array(list_length_realfakeloader)/len(dataset.target)
+    return correct_loader,np.array(list_length_realfakeloader)/len(dataset.target),
 
 def GetListTeacherFeatureFakeReal(model, loader, showScatter = False):
     list_features = [[],[]]
@@ -66,9 +72,7 @@ def GetListTeacherFeatureFakeReal(model, loader, showScatter = False):
                 for _,(img, label) in enumerate(loader[i][j]):
                     train_results[i].append(model(img.cuda()).cpu().detach().numpy())
                     labels[i].append(label) 
-                    test = teacher_model.features(img.cuda())
-                    #train_results[j].append(model(img.cuda()).cpu().detach().numpy())
-                    #labels[j].append(label)
+                    test = model.features(img.cuda())
                     if temp is not None:
                         temp = torch.cat((maxpool(test),temp))
                     else:
@@ -87,26 +91,6 @@ def GetListTeacherFeatureFakeReal(model, loader, showScatter = False):
                 plt.legend()
                 plt.show()
     return list_features
-
-
-def GetSplitLoadersRealFake(list_correct,dataset,num_store_per):
-    correct_loader=[[],[]]#real5, fake5 리스트로 들어감
-    num_data = 0
-    for i in range(num_store_per):
-        list_temp = [list_correct[i][0],list_correct[i][1]]
-        for rf in range(len(list_temp)):
-            if not list_temp[rf] :
-                correct_loader[rf].append([])
-                continue
-            temp_dataset = copy.deepcopy(dataset)
-            temp_dataset.data = np.array(temp_dataset.data[list_correct[i][rf]])
-            temp_dataset.target = np.array(temp_dataset.target[list_correct[i][rf]])
-            custum = CustumDataset(temp_dataset.data,temp_dataset.target,train_aug)
-            correct_loader[rf].append(DataLoader(custum,
-                                     batch_size=200, shuffle=False, num_workers=4, pin_memory=True))    
-    
-    list_length_realfakeloader = [[len(j.dataset) if j else 0 for j in i] for i in correct_loader]
-    return correct_loader,np.array(list_length_realfakeloader)/len(dataset.target)
 
 def func_correct(model, data_loader):
     list_correct = [[[],[]] for i in range(5)]
@@ -152,7 +136,7 @@ def correct_binary(model, inputs, targets, b_ratio_Data = False):
         temp_ = np.array(temp_).reshape(-1, 1)
         real_90, fake_90 = [], []
         for l in range(len(_targets)):
-            idx = _GetIndex_2(temp[l][_targets[l]].data)
+            idx = _GetIndex(temp[l][_targets[l]].data)
             if idx >= 0:
                 correct_cnt+=1
                 if _targets[l] == 0:
@@ -165,6 +149,29 @@ def correct_binary(model, inputs, targets, b_ratio_Data = False):
             ratio_data = GetRatioData(list_correct,correct_cnt)
     return list_correct, ratio_data
 
+def correct_2(model, inputs, targets):
+    list_correct = [[[], []] for i in range(5)]
+    model.eval()
+    cnt = 0
+   
+    _inputs = inputs.cuda()
+    _targets = targets.cuda()
+    with torch.no_grad():
+        outputs = model(_inputs)
+        temp = nn.Softmax(dim=1)(outputs)
+        temp_ = [temp[l] for l in range(len(_targets))]
+        temp_ = np.array(temp_).reshape(-1, 1)
+        real_90, fake_90 = [], []
+        for l in range(len(_targets)):
+            idx = _GetIndex_2(temp[l][_targets[l]].data)
+            if idx >= 0:
+                correct_cnt+=1
+                if _targets[l] == 0:
+                    list_correct[idx][0].append((cnt,_inputs[l]))
+                else:
+                    list_correct[idx][1].append((cnt,_inputs[l]))
+            cnt += 1
+    return list_correct
 
 def GetFeatureMaxpool(model,list_loader): #list_loader : consists of index,data
     feat = None
