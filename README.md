@@ -1,4 +1,4 @@
-#<div align="center"> FReTAL: Generalizing Deepfake Detection using Knowledge Distillation and Representation Learning</div>
+# FReTAL: Generalizing Deepfake Detection using Knowledge Distillation and Representation Learning
  It is for transfer domain adaptation learning by minimizing the knowledge forgetting without any source data.
 
 # Run
