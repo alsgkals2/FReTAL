@@ -1,5 +1,5 @@
-# FReTAL
- It is for transfer learning by minimizing the knowledge forgetting without any source data.
+# FReTAL: Generalizing Deepfake Detection using Knowledge Distillation and Representation Learning
+ It is for transfer domain adaptation learning by minimizing the knowledge forgetting without any source data.
 
 # Run
  For running the files, please input the commden.
@@ -12,4 +12,4 @@
  Both load the dataset as well as make folder that is saved the weight of the student model while transfer learning'.
 
 
-# some code will be modified more flexible when inputting the commend.
+# README and description will be updated...
