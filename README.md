@@ -1,3 +1,6 @@
+## Overview.
+<img src='./images/FReTAL_Motivation.png' width=500>
+
 ## FReTAL
 [FReTAL: Generalizing Deepfake Detection using Knowledge Distillation and Representation Learning](https://openaccess.thecvf.com/content/CVPR2021W/WMF/html/Kim_FReTAL_Generalizing_Deepfake_Detection_Using_Knowledge_Distillation_and_Representation_Learning_CVPRW_2021_paper.html)
 
@@ -19,8 +22,7 @@ It make the folder ([name_source]_[name_target]) as well as load the dataset fro
 Also, It is saved the weight of the student model while transfer learning.
 
 ## README and description will be updated...
-## Overview.
-<img src='./images/FReTAL_Motivation.png' width=500>
+
 ## Citation
 
 If you find our work useful for your research, please consider citing the following papers :)
