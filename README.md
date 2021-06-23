@@ -19,8 +19,8 @@ It make the folder ([name_source]_[name_target]) as well as load the dataset fro
 Also, It is saved the weight of the student model while transfer learning.
 
 ## README and description will be updated...
-## Overview of our framework.
-<img src='./image/overview.png' width=1000>
+## Overview.
+<img src='./images/FReTAL_Motivation.png' width=500>
 ## Citation
 
 If you find our work useful for your research, please consider citing the following papers :)
