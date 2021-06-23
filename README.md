@@ -17,3 +17,20 @@ It make the folder ([name_source]_[name_target]) as well as load the dataset fro
 Also, It is saved the weight of the student model while transfer learning.
 
 # README and description will be updated...
+
+## Citation
+
+If you find our work useful for your research, please consider citing the following papers :)
+
+```
+@InProceedings{Kim_2021_CVPR,
+    author    = {Kim, Minha and Tariq, Shahroz and Woo, Simon S.},
+    title     = {FReTAL: Generalizing Deepfake Detection Using Knowledge Distillation and Representation Learning},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+    month     = {June},
+    year      = {2021},
+    pages     = {1001-1012}
+}
+```
+
+
