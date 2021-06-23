@@ -1,5 +1,6 @@
 ## FReTAL
 [FReTAL: Generalizing Deepfake Detection using Knowledge Distillation and Representation Learning](https://openaccess.thecvf.com/content/CVPR2021W/WMF/html/Kim_FReTAL_Generalizing_Deepfake_Detection_Using_Knowledge_Distillation_and_Representation_Learning_CVPRW_2021_paper.html)
+
 A transfer domain adaptation learning by minimizing knowledge forgetting without any source data.
 
 ## Overview
